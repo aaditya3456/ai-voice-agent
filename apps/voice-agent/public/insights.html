@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HarborSpring Q4 Live Insights & Nudges Dashboard</title>
+  <meta name="description" content="Real-time call insights, compliance risk detection, and nudge engine dashboard.">
+  <style>
+    :root {
+      --bg-primary: #0a0f1d;
+      --bg-secondary: #131d33;
+      --bg-card: #18233c;
+      --bg-input: #1e2c4a;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --purple: #a855f7;
+      --border: #223254;
+      --radius: 12px;
+      --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: linear-gradient(135deg, #0f2038 0%, #0a0f1d 100%);
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    header .brand { display: flex; align-items: center; gap: 12px; }
+    header h1 { font-size: 18px; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; }
+    header .status-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .status-tag.NORMAL { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+    .status-tag.NEEDS_ATTENTION { background: rgba(245,158,11,0.15); color: var(--warning); border: 1px solid rgba(245,158,11,0.3); }
+    .status-tag.CRITICAL_INTERVENTION { background: rgba(239,68,68,0.2); color: var(--danger); border: 1px solid rgba(239,68,68,0.4); animation: pulse 1.5s infinite; }
+    .status-tag.OPPORTUNITY { background: rgba(56,189,248,0.15); color: var(--accent); border: 1px solid rgba(56,189,248,0.3); }
+
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    header nav { display: flex; gap: 12px; }
+    header nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    header nav a:hover { color: var(--text-primary); border-color: var(--accent); }
+
+    /* ── Metrics Bar ── */
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      padding: 16px 28px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .metric-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .metric-title { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; }
+    .metric-value { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+    .metric-sub { font-size: 10px; color: var(--text-secondary); }
+
+    /* ── Main Layout ── */
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 340px 1fr 400px;
+      gap: 0;
+      overflow: hidden;
+    }
+    @media (max-width: 1100px) {
+      main { grid-template-columns: 1fr 1fr; }
+      .control-panel { grid-column: span 2; }
+    }
+    @media (max-width: 768px) {
+      main { grid-template-columns: 1fr; }
+      .control-panel { grid-column: span 1; }
+    }
+
+    /* ── Columns ── */
+    .col {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .col:last-child { border-right: none; }
+    .col-header {
+      padding: 12px 18px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ── Control Panel (Left) ── */
+    .control-panel {
+      padding: 18px;
+      background: var(--bg-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+    .control-group {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .control-group h3 { font-size: 12px; text-transform: uppercase; color: var(--accent); letter-spacing: 0.5px; }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 8px 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 13px;
+      outline: none;
+    }
+    select:focus, input[type="text"]:focus { border-color: var(--accent); }
+    .btn {
+      padding: 9px 16px;
+      border-radius: 6px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #0a0f1d; }
+    .btn-primary:hover { background: #7dd3fc; }
+    .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--text-muted); }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-row { display: flex; gap: 8px; }
+
+    /* ── Transcript Stream (Center) ── */
+    .transcript-stream {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: var(--bg-primary);
+    }
+    .chunk-card {
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      font-size: 14px;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease;
+      position: relative;
+    }
+    .chunk-card.customer { border-left: 4px solid var(--accent); }
+    .chunk-card.agent { border-left: 4px solid var(--purple); }
+    .chunk-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .chunk-speaker { font-weight: 700; text-transform: uppercase; }
+    .chunk-card.customer .chunk-speaker { color: var(--accent); }
+    .chunk-card.agent .chunk-speaker { color: var(--purple); }
+
+    /* ── Nudges & Insights (Right) ── */
+    .nudges-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: var(--bg-secondary);
+    }
+    .nudge-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: slideIn 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .nudge-card.CRITICAL { border-left: 4px solid var(--danger); background: rgba(239,68,68,0.06); }
+    .nudge-card.HIGH { border-left: 4px solid var(--warning); background: rgba(245,158,11,0.06); }
+    .nudge-card.MEDIUM { border-left: 4px solid var(--accent); background: rgba(56,189,248,0.06); }
+    .nudge-card.LOW { border-left: 4px solid var(--success); }
+
+    .nudge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nudge-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .nudge-badge.COMPLIANCE_RISK { background: rgba(239,68,68,0.2); color: var(--danger); }
+    .nudge-badge.FRUSTRATION { background: rgba(245,158,11,0.2); color: var(--warning); }
+    .nudge-badge.BUYING_SIGNAL { background: rgba(16,185,129,0.2); color: var(--success); }
+    .nudge-badge.CALLBACK_HUMAN_REQUEST { background: rgba(56,189,248,0.2); color: var(--accent); }
+
+    .nudge-priority { font-size: 10px; font-weight: 700; color: var(--text-muted); }
+    .nudge-message { font-size: 13px; font-weight: 600; color: var(--text-primary); line-height: 1.4; }
+    .nudge-quote {
+      font-size: 11px;
+      font-style: italic;
+      color: var(--text-secondary);
+      background: var(--bg-card);
+      padding: 6px 10px;
+      border-radius: 6px;
+      border-left: 2px solid var(--border);
+    }
+    .nudge-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 6px;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>⚡ Live Insights & Nudge Engine</h1>
+      <span class="status-tag NORMAL" id="callStatusTag">NORMAL</span>
+    </div>
+    <nav>
+      <a href="/">🎙 Voice Agent</a>
+      <a href="/insights.html" style="border-color: var(--accent); color: var(--accent);">⚡ Live Insights</a>
+      <a href="/localization.html">🌐 Q3 Localization</a>
+    </nav>
+  </header>
+
+  <!-- ── Metrics Bar ── -->
+  <div class="metrics-bar">
+    <div class="metric-card">
+      <span class="metric-title">Active Nudges</span>
+      <span class="metric-value" id="valActiveNudges">0</span>
+      <span class="metric-sub">Real-time alerts</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-title">Suppressed Duplicates</span>
+      <span class="metric-value" id="valSuppressed" style="color:var(--warning);">0</span>
+      <span class="metric-sub">15s cooldown window</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-title">P50 Latency</span>
+      <span class="metric-value" id="valP50">0.00 ms</span>
+      <span class="metric-sub">Median pipeline delay</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-title">P95 Latency</span>
+      <span class="metric-value" id="valP95">0.00 ms</span>
+      <span class="metric-sub">Tail delivery delay</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-title">Chunks Processed</span>
+      <span class="metric-value" id="valChunks">0</span>
+      <span class="metric-sub">Incremental turns</span>
+    </div>
+  </div>
+
+  <main>
+    <!-- ── Left: Replay Simulator & Controls ── -->
+    <div class="col control-panel">
+      <div class="control-group">
+        <h3>🎬 Replay Simulator</h3>
+        <p style="font-size:12px; color:var(--text-secondary);">Select a deterministic assessment scenario to simulate incremental audio streaming:</p>
+        <select id="scenarioSelect">
+          <option value="scenario-buying-signal">1. Buying / Expansion Signal</option>
+          <option value="scenario-compliance-risk">2. Compliance Risk (Approval Claim)</option>
+          <option value="scenario-frustration">3. Customer Frustration & Suppression</option>
+          <option value="scenario-noisy-transcript">4. Noisy / Ambiguous (NO_NUDGE)</option>
+          <option value="scenario-callback-request">5. Human / Callback Request</option>
+        </select>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="playCurrentScenario()" id="btnPlay">▶ Play Scenario</button>
+          <button class="btn btn-secondary" onclick="stepCurrentScenario()" id="btnStep">⏭ Next Step</button>
+        </div>
+        <button class="btn btn-danger" onclick="resetEngine()" style="margin-top:4px;">🔄 Reset Session</button>
+      </div>
+
+      <div class="control-group">
+        <h3>💬 Send Live Transcript Chunk</h3>
+        <p style="font-size:12px; color:var(--text-secondary);">Test signal detection with arbitrary spoken text:</p>
+        <select id="chunkSpeaker">
+          <option value="customer">Customer</option>
+          <option value="agent">Agent</option>
+        </select>
+        <input type="text" id="chunkText" placeholder="e.g. 'Can someone call me back?'" onkeydown="if(event.key==='Enter') sendChunk();">
+        <button class="btn btn-primary" onclick="sendChunk()">Send Chunk</button>
+      </div>
+
+      <div class="control-group">
+        <h3>⚙ Engine Controls</h3>
+        <div style="font-size:11px; color:var(--text-secondary); display:flex; flex-direction:column; gap:6px;">
+          <div><strong>Threshold:</strong> 70% confidence</div>
+          <div><strong>Cooldown:</strong> 15,000 ms (15s)</div>
+          <div><strong>Nudge Expiry:</strong> 30,000 ms (30s)</div>
+          <div><strong>Duplicate Suppression:</strong> Enabled</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Center: Incremental Transcript Stream ── -->
+    <div class="col">
+      <div class="col-header">
+        <span>Live Transcript Stream</span>
+        <span id="transcriptCounter" style="font-size:11px; color:var(--text-muted);">0 turns</span>
+      </div>
+      <div class="transcript-stream" id="transcriptContainer">
+        <div style="text-align:center; color:var(--text-muted); margin-top:60px; font-size:13px;">
+          Waiting for transcript chunks…<br><br>
+          Click <strong>Play Scenario</strong> or send a custom chunk to begin live signal processing.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Right: Live Nudges & Signals ── -->
+    <div class="col">
+      <div class="col-header">
+        <span>Active Nudges</span>
+        <span id="nudgeCounter" style="font-size:11px; color:var(--accent);">0 Active</span>
+      </div>
+      <div class="nudges-panel" id="nudgesContainer">
+        <div style="text-align:center; color:var(--text-muted); margin-top:60px; font-size:13px;">
+          No active nudges.<br><br>
+          Nudges appear in real time when compliance risks, frustration, callbacks, or buying signals trigger.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let currentScenarioChunks = [];
+    let currentStepIndex = 0;
+    let isPlaying = false;
+    let scenarios = [];
+
+    // Load available scenarios on boot
+    fetch('/api/insights/scenarios')
+      .then(r => r.json())
+      .then(data => {
+        scenarios = data;
+        loadSelectedScenarioChunks();
+      })
+      .catch(console.error);
+
+    document.getElementById('scenarioSelect').addEventListener('change', () => {
+      loadSelectedScenarioChunks();
+    });
+
+    function loadSelectedScenarioChunks() {
+      const id = document.getElementById('scenarioSelect').value;
+      const sc = scenarios.find(s => s.id === id);
+      if (sc) {
+        currentScenarioChunks = sc.chunks;
+        currentStepIndex = 0;
+      }
+    }
+
+    async function sendChunk() {
+      const text = document.getElementById('chunkText').value.trim();
+      const speaker = document.getElementById('chunkSpeaker').value;
+      if (!text) return;
+      document.getElementById('chunkText').value = '';
+
+      try {
+        const res = await fetch('/api/insights/chunk', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ speaker, text })
+        });
+        const data = await res.json();
+        renderState(data.state);
+      } catch (err) {
+        console.error('Error sending chunk:', err);
+      }
+    }
+
+    async function stepCurrentScenario() {
+      if (currentStepIndex >= currentScenarioChunks.length) {
+        currentStepIndex = 0;
+      }
+      const item = currentScenarioChunks[currentStepIndex];
+      currentStepIndex += 1;
+
+      try {
+        const res = await fetch('/api/insights/chunk', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ speaker: item.speaker, text: item.text })
+        });
+        const data = await res.json();
+        renderState(data.state);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function playCurrentScenario() {
+      if (isPlaying) return;
+      isPlaying = true;
+      document.getElementById('btnPlay').disabled = true;
+      await resetEngine();
+      loadSelectedScenarioChunks();
+
+      for (let i = 0; i < currentScenarioChunks.length; i++) {
+        const item = currentScenarioChunks[i];
+        try {
+          const res = await fetch('/api/insights/chunk', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ speaker: item.speaker, text: item.text })
+          });
+          const data = await res.json();
+          renderState(data.state);
+        } catch (e) {
+          console.error(e);
+        }
+        await new Promise(r => setTimeout(r, 650));
+      }
+
+      isPlaying = false;
+      document.getElementById('btnPlay').disabled = false;
+    }
+
+    async function resetEngine() {
+      try {
+        const res = await fetch('/api/insights/reset', { method: 'POST' });
+        const data = await res.json();
+        currentStepIndex = 0;
+        renderState(data.state);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function renderState(state) {
+      if (!state) return;
+
+      // Status tag
+      const statusTag = document.getElementById('callStatusTag');
+      statusTag.textContent = state.call_status;
+      statusTag.className = 'status-tag ' + state.call_status;
+
+      // Metrics
+      document.getElementById('valActiveNudges').textContent = state.active_nudges.length;
+      document.getElementById('valSuppressed').textContent = state.suppressed_duplicates_count;
+      document.getElementById('valP50').textContent = state.latency_stats.p50_latency_ms.toFixed(2) + ' ms';
+      document.getElementById('valP95').textContent = state.latency_stats.p95_latency_ms.toFixed(2) + ' ms';
+      document.getElementById('valChunks').textContent = state.chunks.length;
+      document.getElementById('transcriptCounter').textContent = state.chunks.length + ' turns';
+      document.getElementById('nudgeCounter').textContent = state.active_nudges.length + ' Active';
+
+      // Transcript Stream
+      const tContainer = document.getElementById('transcriptContainer');
+      if (state.chunks.length === 0) {
+        tContainer.innerHTML = '<div style="text-align:center; color:var(--text-muted); margin-top:60px; font-size:13px;">Waiting for transcript chunks…</div>';
+      } else {
+        tContainer.innerHTML = state.chunks.map(c => `
+          <div class="chunk-card ${c.speaker}">
+            <div class="chunk-meta">
+              <span class="chunk-speaker">${c.speaker === 'agent' ? '🤖 Agent' : '🧑 Customer'}</span>
+              <span>${new Date(c.timestamp).toLocaleTimeString()}</span>
+            </div>
+            <div>${escapeHtml(c.text)}</div>
+          </div>
+        `).join('');
+        tContainer.scrollTop = tContainer.scrollHeight;
+      }
+
+      // Active Nudges
+      const nContainer = document.getElementById('nudgesContainer');
+      if (state.active_nudges.length === 0) {
+        nContainer.innerHTML = '<div style="text-align:center; color:var(--text-muted); margin-top:60px; font-size:13px;">No active nudges.<br><br>All signals clear.</div>';
+      } else {
+        nContainer.innerHTML = state.active_nudges.map(n => `
+          <div class="nudge-card ${n.priority}">
+            <div class="nudge-header">
+              <span class="nudge-badge ${n.signal_type}">${n.signal_type.replace(/_/g,' ')}</span>
+              <span class="nudge-priority">${n.priority} · ${(n.confidence * 100).toFixed(0)}% Conf</span>
+            </div>
+            <div class="nudge-message">${escapeHtml(n.message)}</div>
+            <div class="nudge-quote">"${escapeHtml(n.source_transcript)}"</div>
+            <div class="nudge-footer">
+              <span>Latency: ${n.latency_ms.end_to_end_ms}ms (det: ${n.latency_ms.detection_ms}ms)</span>
+              <span>Expires: ${new Date(n.expiry).toLocaleTimeString()}</span>
+            </div>
+          </div>
+        `).join('');
+        nContainer.scrollTop = nContainer.scrollHeight;
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Initial state fetch
+    fetch('/api/insights/state')
+      .then(r => r.json())
+      .then(renderState)
+      .catch(console.error);
+
+    // Auto refresh active nudges expiry every 3 seconds
+    setInterval(() => {
+      fetch('/api/insights/state')
+        .then(r => r.json())
+        .then(renderState)
+        .catch(() => {});
+    }, 3000);
+  </script>
+</body>
+</html>

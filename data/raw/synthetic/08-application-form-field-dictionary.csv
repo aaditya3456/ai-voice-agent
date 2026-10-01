@@ -1,0 +1,11 @@
+# provenance: {"document_id":"HSB-008","title":"Application Form Field Dictionary","source_type":"field_dictionary","version":"1.0.0","effective_date":"2026-09-30","language":"en","synthetic":true,"pii_present":true}
+field_name,display_name,type,required,validation,pii_classification,description
+business_name,Business alias,string,false,synthetic alias only,indirect,Use an alias in prototype scenarios; never a real business name.
+business_age_months,Business age in months,integer,true,integer >= 0,none,Used for the 12-month synthetic threshold.
+registration_status,Registration status,enum,true,registered|not_registered|unknown,none,Whether business is registered in Harbor Market.
+monthly_revenue,Average monthly revenue,number,true,number >= 0,financial_sensitive,Stated amount in fictional HSC.
+requested_amount,Requested amount,number,true,50000 <= amount <= 1000000,financial_sensitive,Requested fictional HSC amount.
+loan_purpose,Intended use,string,true,non-empty,none,Working capital or equipment use.
+contact_preference,Contact preference,enum,true,phone|email|none,none,Preferred synthetic follow-up channel.
+phone,Phone number,string,false,do_not_collect_real_values,direct,Direct PII; blank in all fixtures and redacted from logs.
+email,Email address,string,false,do_not_collect_real_values,direct,Direct PII; blank in all fixtures and redacted from logs.

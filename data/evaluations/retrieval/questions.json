@@ -1,0 +1,9 @@
+[
+  { "id": "product-001", "user_question": "What is the HarborSpring SME Business Loan?", "expected_source": "HSB-001", "expected_topic": "product", "expected_answer_facts": ["fictional SME lender", "working capital or equipment"], "unsupported": false },
+  { "id": "qualification-001", "user_question": "What monthly revenue do I need?", "expected_source": "HSB-002", "expected_topic": "qualification", "expected_answer_facts": ["100,000 HSC"], "unsupported": false },
+  { "id": "policy-001", "user_question": "How long must my business have been operating?", "expected_source": "HSB-002", "expected_topic": "policy", "expected_answer_facts": ["12 months"], "unsupported": false },
+  { "id": "faq-001", "user_question": "Can I apply if I do not have all my documents yet?", "expected_source": "HSB-005", "expected_topic": "faq", "expected_answer_facts": ["documents", "formal application"], "unsupported": false },
+  { "id": "objection-001", "user_question": "I do not want to share my financial information.", "expected_source": "HSB-006", "expected_topic": "objection", "expected_answer_facts": ["respect", "financial information"], "unsupported": false },
+  { "id": "process-001", "user_question": "What documents are required?", "expected_source": "HSB-003", "expected_topic": "process", "expected_answer_facts": ["registration", "revenue evidence"], "unsupported": false },
+  { "id": "unsupported-001", "user_question": "Can you guarantee that my loan will be approved?", "expected_source": null, "expected_topic": "unsupported", "expected_answer_facts": ["fallback"], "unsupported": true }
+]

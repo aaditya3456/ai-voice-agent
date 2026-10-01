@@ -1,0 +1,176 @@
+[
+  {
+    "id": "PH-01",
+    "name": "Philippines: English cooperative customer",
+    "market": "PH",
+    "language": "en",
+    "description": "Customer inquires politely in Philippine English about family protection options.",
+    "category": "cooperative",
+    "input_query": "Hello, I am interested in exploring family protection options.",
+    "expected_intent": "qualification_discovery",
+    "expected_substring": "protection options",
+    "expected_code_switch": false,
+    "expected_fallback": false,
+    "expected_escalation": false
+  },
+  {
+    "id": "PH-02",
+    "name": "Philippines: Tagalog cooperative customer",
+    "market": "PH",
+    "language": "fil",
+    "description": "Customer introduces themselves in pure Tagalog and asks about family coverage.",
+    "category": "cooperative",
+    "input_query": "Magandang araw po. Interesado po akong malaman ang tungkol sa proteksyon ng pamilya.",
+    "expected_intent": "qualification_discovery",
+    "expected_substring": "proteksyon",
+    "expected_code_switch": false,
+    "expected_fallback": false,
+    "expected_escalation": false
+  },
+  {
+    "id": "PH-03",
+    "name": "Philippines: Taglish mixed conversation",
+    "market": "PH",
+    "language": "taglish",
+    "description": "Natural intra-sentential code-switching combining Tagalog grammatical frames and English insurance loanwords.",
+    "category": "code_switching",
+    "input_query": "Pwede po ba i-explain kung magkano ang monthly premium at paano ang coverage?",
+    "expected_intent": "payment_explanation",
+    "expected_substring": "premium",
+    "expected_code_switch": true,
+    "expected_terms": [
+      "Premium",
+      "Coverage"
+    ],
+    "expected_fallback": false,
+    "expected_escalation": false
+  },
+  {
+    "id": "PH-04",
+    "name": "Philippines: Insurance-specific objection",
+    "market": "PH",
+    "language": "taglish",
+    "description": "Customer objects that the premium amount feels too expensive for their monthly budget.",
+    "category": "objection",
+    "input_query": "Mahal ang premium niyan, baka hindi ko kayang bayaran buwan-buwan.",
+    "expected_intent": "objection_expensive_premium",
+    "expected_substring": "Naiintindihan ko po ang inyong concern",
+    "expected_code_switch": true,
+    "expected_terms": [
+      "Premium"
+    ],
+    "expected_fallback": false,
+    "expected_escalation": false
+  },
+  {
+    "id": "PH-05",
+    "name": "Philippines: Human escalation",
+    "market": "PH",
+    "language": "taglish",
+    "description": "Customer explicitly demands to speak with a human financial advisor.",
+    "category": "escalation",
+    "input_query": "Gusto ko ng tao, ayoko makipag-usap sa bot.",
+    "expected_intent": "human_escalation",
+    "expected_substring": "human financial advisor",
+    "expected_code_switch": false,
+    "expected_fallback": false,
+    "expected_escalation": true
+  },
+  {
+    "id": "ID-06",
+    "name": "Indonesia: Formal Bahasa cooperative customer",
+    "market": "ID",
+    "language": "id_formal",
+    "description": "Formal Indonesian customer inquiry regarding consumer financing simulations.",
+    "category": "cooperative",
+    "input_query": "Selamat siang. Saya ingin melihat simulasi pembiayaan konsumen.",
+    "expected_intent": "qualification_discovery",
+    "expected_substring": "pembiayaan",
+    "expected_code_switch": false,
+    "expected_fallback": false,
+    "expected_escalation": false
+  },
+  {
+    "id": "ID-07",
+    "name": "Indonesia: Colloquial Bahasa conversation",
+    "market": "ID",
+    "language": "id_colloquial",
+    "description": "Informal colloquial Indonesian conversation ('cuma demo', 'ngobrol santai') exploring installments.",
+    "category": "cooperative",
+    "input_query": "Halo, mau cek dong soal cicilan per bulan dan simulasi tenornya.",
+    "expected_intent": "payment_explanation",
+    "expected_substring": "DP, tenor, dan angsuran",
+    "expected_code_switch": false,
+    "expected_terms": [
+      "Cicilan / Angsuran",
+      "Tenor"
+    ],
+    "expected_fallback": false,
+    "expected_escalation": false
+  },
+  {
+    "id": "ID-08",
+    "name": "Indonesia: Mixed English/finance terminology",
+    "market": "ID",
+    "language": "id_formal",
+    "description": "Customer query blending Indonesian sentence structure with standard finance loanwords (DP, tenor, approval).",
+    "category": "code_switching",
+    "input_query": "Apakah butuh DP untuk approval, dan berapa estimasi cicilan per bulan untuk tenor 12 bulan?",
+    "expected_intent": "payment_explanation",
+    "expected_substring": "illustrative",
+    "expected_code_switch": true,
+    "expected_terms": [
+      "DP (Down Payment)",
+      "Approval",
+      "Tenor",
+      "Cicilan / Angsuran"
+    ],
+    "expected_fallback": false,
+    "expected_escalation": false
+  },
+  {
+    "id": "ID-09",
+    "name": "Indonesia: Consumer-finance objection",
+    "market": "ID",
+    "language": "id_formal",
+    "description": "Customer states the installment is too heavy ('Cicilannya berat') and raises affordability concerns.",
+    "category": "objection",
+    "input_query": "Cicilannya berat sekali, apakah ada opsi yang lebih ringan?",
+    "expected_intent": "objection_high_installment",
+    "expected_substring": "memahami kekhawatiran",
+    "expected_code_switch": false,
+    "expected_terms": [
+      "Cicilan / Angsuran"
+    ],
+    "expected_fallback": false,
+    "expected_escalation": false
+  },
+  {
+    "id": "ID-10",
+    "name": "Indonesia: Human escalation",
+    "market": "ID",
+    "language": "id_formal",
+    "description": "Customer directly requests to speak with a human customer service officer ('Saya mau bicara dengan orang').",
+    "category": "escalation",
+    "input_query": "Saya mau bicara dengan orang sekarang juga.",
+    "expected_intent": "human_escalation",
+    "expected_substring": "petugas resmi",
+    "expected_code_switch": false,
+    "expected_fallback": false,
+    "expected_escalation": true
+  },
+  {
+    "id": "ID-11",
+    "name": "Indonesia: Regional accent/variant limitation check",
+    "market": "ID",
+    "language": "id_formal",
+    "description": "Verifies documented regional phonetic shifts (Javanese breathy stops and Sundanese /f/-/p/ alternation) and strict native-speaker disclaimer.",
+    "category": "regional_accent",
+    "input_query": "Apakah ada cabang di Jawa Tengah atau Bandung untuk verifikasi?",
+    "expected_intent": "unsupported_fallback",
+    "expected_substring": "informasi sintetis yang terverifikasi",
+    "expected_code_switch": false,
+    "expected_fallback": true,
+    "expected_escalation": false
+  }
+]

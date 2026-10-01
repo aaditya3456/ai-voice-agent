@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "synthetic": true,
+    "purpose": "Phase 1 alias-only qualification and conversation test scenarios",
+    "prohibited": ["real names", "real phone numbers", "real email addresses", "real addresses", "government identifiers"]
+  },
+  "customers": [
+    {
+      "id": "customer_001",
+      "alias": "ORCHID_STUDIO",
+      "scenario": "eligible",
+      "consent": true,
+      "business_age_months": 24,
+      "registration_status": "registered",
+      "market": "Harbor Market",
+      "monthly_revenue_hsc": 180000,
+      "requested_amount_hsc": 200000,
+      "loan_purpose": "inventory",
+      "contact_preference": "email",
+      "phone": "",
+      "email": ""
+    },
+    {
+      "id": "customer_002",
+      "alias": "NORTHWIND_REPAIR",
+      "scenario": "ineligible",
+      "consent": true,
+      "business_age_months": 8,
+      "registration_status": "registered",
+      "market": "Harbor Market",
+      "monthly_revenue_hsc": 120000,
+      "requested_amount_hsc": 80000,
+      "loan_purpose": "equipment",
+      "contact_preference": "none",
+      "phone": "",
+      "email": ""
+    },
+    {
+      "id": "customer_003",
+      "alias": "PAPER_KITE_CAFE",
+      "scenario": "missing_information",
+      "consent": true,
+      "business_age_months": null,
+      "registration_status": "registered",
+      "market": "Harbor Market",
+      "monthly_revenue_hsc": null,
+      "requested_amount_hsc": 75000,
+      "loan_purpose": "working_capital",
+      "contact_preference": "phone",
+      "phone": "",
+      "email": ""
+    },
+    {
+      "id": "customer_004",
+      "alias": "MOSS_AND_MILL",
+      "scenario": "conflicting_information",
+      "consent": true,
+      "business_age_months": 18,
+      "registration_status": "registered_then_not_registered",
+      "market": "Harbor Market",
+      "monthly_revenue_hsc": 140000,
+      "requested_amount_hsc": 150000,
+      "loan_purpose": "equipment",
+      "contact_preference": "email",
+      "phone": "",
+      "email": ""
+    },
+    {
+      "id": "customer_005",
+      "alias": "SILVER_FERN_TRADERS",
+      "scenario": "escalation",
+      "consent": true,
+      "human_assistance_requested": true,
+      "complaint": "synthetic complaint: application seems incorrect",
+      "phone": "",
+      "email": ""
+    },
+    {
+      "id": "customer_006",
+      "alias": "EMBER_WORKSHOP",
+      "scenario": "objection",
+      "utterance": "I do not want to share financial information.",
+      "phone": "",
+      "email": ""
+    },
+    {
+      "id": "customer_007",
+      "alias": "BLUE_HARBOR_FOODS",
+      "scenario": "unsupported_question",
+      "utterance": "Can you give me tax advice and guarantee approval?",
+      "phone": "",
+      "email": ""
+    }
+  ]
+}

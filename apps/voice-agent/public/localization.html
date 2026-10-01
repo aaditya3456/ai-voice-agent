@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HarborSpring Q3 Native-Language Voice Localization Demo</title>
+  <meta name="description" content="Demonstration prototype of native-language voice bots for Philippines (Bancassurance) and Indonesia (Multifinance).">
+  <style>
+    :root {
+      --bg-primary: #0a0f1d;
+      --bg-secondary: #131d33;
+      --bg-card: #18233c;
+      --bg-card-alt: #1c2b48;
+      --bg-input: #1e2c4a;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --accent-ph: #3b82f6;
+      --accent-id: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #f87171;
+      --purple: #a855f7;
+      --border: #223254;
+      --radius: 12px;
+      --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: linear-gradient(135deg, #0f2038 0%, #0a0f1d 100%);
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    header .brand { display: flex; align-items: center; gap: 12px; }
+    header h1 { font-size: 18px; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; }
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .badge.prototype {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+    .nav-links { display: flex; gap: 10px; }
+    .nav-btn {
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .nav-btn:hover { background: var(--bg-input); color: var(--text-primary); }
+    .nav-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .banner-warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+      padding: 10px 28px;
+      font-size: 12px;
+      color: #fde68a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Market and Language Selector Bar */
+    .controls-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .controls-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .control-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      min-width: 90px;
+    }
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pill-btn {
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+    .pill-btn:hover { background: #26385d; color: var(--text-primary); }
+    .pill-btn.active {
+      background: var(--accent);
+      color: #061120;
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+    }
+    .pill-btn.ph.active {
+      background: #2563eb;
+      color: white;
+      border-color: #3b82f6;
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
+    }
+    .pill-btn.id.active {
+      background: #dc2626;
+      color: white;
+      border-color: #ef4444;
+      box-shadow: 0 0 12px rgba(220, 38, 38, 0.4);
+    }
+
+    /* Grid Layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 960px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Panels */
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 12px;
+    }
+    .panel-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Greeting box */
+    .greeting-box {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(168, 85, 247, 0.05) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .greeting-text {
+      font-size: 15px;
+      line-height: 1.5;
+      font-style: italic;
+      color: #e2e8f0;
+    }
+    .action-btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-action {
+      background: var(--bg-input);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn-action:hover { background: var(--accent); color: #061120; }
+
+    /* Preset prompt buttons */
+    .preset-prompts {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .preset-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .preset-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .chip {
+      background: var(--bg-card-alt);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .chip:hover {
+      background: var(--bg-input);
+      color: var(--text-primary);
+      border-color: var(--accent);
+    }
+
+    /* Chat transcript box */
+    .chat-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      height: 380px;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .message {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 85%;
+    }
+    .message.user {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+    .message.agent {
+      align-self: flex-start;
+      align-items: flex-start;
+    }
+    .bubble {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .message.user .bubble {
+      background: #1e3a8a;
+      color: #eff6ff;
+      border-bottom-right-radius: 2px;
+    }
+    .message.agent .bubble {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-bottom-left-radius: 2px;
+    }
+    .bubble-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .meta-tag {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .meta-tag.intent { background: rgba(56, 189, 248, 0.2); color: var(--accent); }
+    .meta-tag.code-switch { background: rgba(168, 85, 247, 0.2); color: var(--purple); }
+    .meta-tag.term { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .meta-tag.fallback { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+    .meta-tag.escalation { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+    /* Input area */
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+    .chat-input {
+      flex: 1;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--text-primary);
+      font-family: var(--font);
+    }
+    .chat-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .send-btn {
+      background: var(--accent);
+      color: #061120;
+      border: none;
+      border-radius: 8px;
+      padding: 0 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .send-btn:hover { background: var(--accent-hover); }
+
+    /* Terminology cards */
+    .term-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .term-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .term-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .term-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .term-local {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+    .term-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+    .term-sample {
+      font-size: 11px;
+      color: #cbd5e1;
+      background: rgba(0,0,0,0.25);
+      border-left: 2px solid var(--accent);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    /* Documentation & Engineering panels */
+    .profile-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+    .profile-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .profile-item h4 {
+      font-size: 12px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .profile-item ul {
+      margin-left: 18px;
+    }
+
+    /* Error Table */
+    .error-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    .error-table th, .error-table td {
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      text-align: left;
+    }
+    .error-table th {
+      background: rgba(0,0,0,0.3);
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <h1>HarborSpring Q3: Native-Language Voice Localization</h1>
+      <span class="badge prototype">Synthetic Prototype</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-btn">← Q1 Voice Agent</a>
+      <a href="insights.html" class="nav-btn">Q4 Live Insights</a>
+      <a href="localization.html" class="nav-btn active">Q3 Localization Demo</a>
+    </div>
+  </header>
+
+  <div class="banner-warning">
+    <span>⚠️</span>
+    <span><strong>Notice:</strong> This is a synthetic assessment prototype. Browser SpeechRecognition and SpeechSynthesis APIs represent the simulated voice layer. <strong>NO native-speaker validation was performed.</strong> All policy numbers and product examples are fictional.</span>
+  </div>
+
+  <div class="container">
+
+    <!-- Controls Bar -->
+    <div class="controls-card">
+      <div class="controls-row">
+        <span class="control-label">Market:</span>
+        <div class="pill-group" id="market-pills">
+          <button class="pill-btn ph active" onclick="switchMarket('PH')">🇵🇭 Philippines (Bancassurance)</button>
+          <button class="pill-btn id" onclick="switchMarket('ID')">🇮🇩 Indonesia (Consumer Finance)</button>
+        </div>
+      </div>
+      <div class="controls-row">
+        <span class="control-label">Language:</span>
+        <div class="pill-group" id="language-pills">
+          <!-- Populated by JS based on market -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="dashboard-grid">
+
+      <!-- Left Column: Interactive Dialogue & Audio -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🎙️</span>
+            <span id="dialogue-panel-title">Live Interactive Dialogue</span>
+          </div>
+          <span class="badge" id="use-case-badge">Bancassurance</span>
+        </div>
+
+        <!-- Localized Greeting Card -->
+        <div class="greeting-box">
+          <div style="font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase;">Localized Initial Greeting</div>
+          <div class="greeting-text" id="greeting-display">Loading greeting...</div>
+          <div class="action-btn-row">
+            <button class="btn-action" onclick="speakText(document.getElementById('greeting-display').innerText)">
+              🔊 Speak Greeting (TTS)
+            </button>
+            <button class="btn-action" onclick="resetChat()">
+              🔄 Reset Conversation
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Preset Prompt Chips -->
+        <div class="preset-prompts">
+          <div class="preset-label">Test Scenarios & Sample Prompts</div>
+          <div class="preset-chips" id="preset-chips">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Chat Transcript Display -->
+        <div class="chat-container" id="chat-container">
+          <!-- Messages will be appended here -->
+        </div>
+
+        <!-- Input Row -->
+        <div class="input-row">
+          <input type="text" id="user-input" class="chat-input" placeholder="Type or select a scenario above..." onkeydown="if(event.key==='Enter') sendMessage()" />
+          <button class="btn-action" id="mic-btn" onclick="toggleVoiceInput()" title="Speech-to-Text via Web Speech API">
+            🎤 Voice
+          </button>
+          <button class="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Terminology Dictionary & Code-Switching Showcase -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>📖</span>
+            <span id="term-panel-title">Domain Terminology & Localization</span>
+          </div>
+          <span class="badge" id="term-count-badge">5 Terms</span>
+        </div>
+
+        <!-- Terminology Cards -->
+        <div class="term-grid" id="term-grid">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Code-Switching & Linguistic Context Box -->
+        <div class="profile-item" style="margin-top: 8px;">
+          <h4>Code-Switching & Natural Phrasing Principles</h4>
+          <p id="code-switch-description" style="font-size: 12px; color: var(--text-secondary);">
+            Loading guidelines...
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Engineering & ASR/TTS Profile Section -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>⚙️</span>
+          <span>Voice Engine / ASR / TTS Engineering Profile & Limitations</span>
+        </div>
+        <span class="badge prototype">Architecture Specifications</span>
+      </div>
+
+      <div class="profile-section">
+        <div class="profile-item">
+          <h4>Prototype Mechanism & Providers</h4>
+          <p><strong>Speech Recognition (ASR):</strong> <span id="asr-provider-desc">Browser SpeechRecognition</span></p>
+          <p style="margin-top: 4px;"><strong>Speech Synthesis (TTS):</strong> <span id="tts-approach-desc">Browser SpeechSynthesis</span></p>
+          <p style="margin-top: 6px; font-size: 11px; color: #fca5a5;">
+            * Production readiness notice: Real telephony deployment would require server-side ASR/TTS benchmarking (e.g., Azure Speech or Google Cloud Speech-to-Text with customized bilingual models).
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="profile-item">
+            <h4>Expected ASR Challenges</h4>
+            <ul id="asr-challenges-list"></ul>
+          </div>
+          <div class="profile-item">
+            <h4>Regional Accent Considerations</h4>
+            <div id="regional-accents-list"></div>
+          </div>
+        </div>
+
+        <div class="profile-item">
+          <h4>Likely Transcription Errors & Prototype Remedies</h4>
+          <table class="error-table">
+            <thead>
+              <tr>
+                <th>Input Phrase</th>
+                <th>Common Misrecognition</th>
+                <th>Acoustic / Lexical Remedy</th>
+              </tr>
+            </thead>
+            <tbody id="error-table-body"></tbody>
+          </table>
+        </div>
+
+        <div class="profile-item" style="border-left: 3px solid var(--danger);">
+          <h4>Native-Language Limitations & Strict Disclosure</h4>
+          <ul id="limitations-list"></ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentMarket = "PH";
+    let currentLanguage = "taglish";
+    let marketConfig = null;
+    let recognition = null;
+    let isRecording = false;
+
+    async function loadConfig(market) {
+      try {
+        const res = await fetch(`/api/localization/config?market=${market}`);
+        if (!res.ok) throw new Error("Failed to fetch localization configuration");
+        marketConfig = await res.json();
+        renderControls();
+        renderGreeting();
+        renderPresets();
+        renderTerminology();
+        renderEngineProfile();
+        resetChat();
+      } catch (err) {
+        console.error("Config load error:", err);
+      }
+    }
+
+    function switchMarket(market) {
+      currentMarket = market;
+      document.querySelectorAll("#market-pills .pill-btn").forEach(btn => btn.classList.remove("active"));
+      if (market === "PH") {
+        document.querySelector("#market-pills .ph").classList.add("active");
+        currentLanguage = "taglish";
+      } else {
+        document.querySelector("#market-pills .id").classList.add("active");
+        currentLanguage = "id_formal";
+      }
+      loadConfig(market);
+    }
+
+    function switchLanguage(lang) {
+      currentLanguage = lang;
+      document.querySelectorAll("#language-pills .pill-btn").forEach(btn => btn.classList.remove("active"));
+      const target = document.querySelector(`#language-pills button[data-lang="${lang}"]`);
+      if (target) target.classList.add("active");
+      renderGreeting();
+      renderPresets();
+    }
+
+    function renderControls() {
+      if (!marketConfig) return;
+      const pillsContainer = document.getElementById("language-pills");
+      pillsContainer.innerHTML = "";
+
+      marketConfig.supported_languages.forEach(lang => {
+        const btn = document.createElement("button");
+        btn.className = `pill-btn ${lang.code === currentLanguage ? "active" : ""}`;
+        btn.setAttribute("data-lang", lang.code);
+        btn.innerText = `${lang.label} (${lang.bcp47})`;
+        btn.onclick = () => switchLanguage(lang.code);
+        pillsContainer.appendChild(btn);
+      });
+
+      document.getElementById("use-case-badge").innerText = marketConfig.use_case;
+      document.getElementById("dialogue-panel-title").innerText = `${marketConfig.market_name} Dialogue Simulator`;
+      document.getElementById("term-panel-title").innerText = `${marketConfig.market_name} Terminology Dictionary`;
+    }
+
+    function renderGreeting() {
+      if (!marketConfig) return;
+      const greeting = marketConfig.greetings[currentLanguage] || marketConfig.greetings.en;
+      document.getElementById("greeting-display").innerText = greeting;
+    }
+
+    function renderPresets() {
+      const container = document.getElementById("preset-chips");
+      container.innerHTML = "";
+
+      let presets = [];
+      if (currentMarket === "PH") {
+        presets = [
+          { label: "Cooperative (Taglish)", text: "Pwede po ba i-explain kung magkano ang monthly premium at paano ang coverage?" },
+          { label: "Objection (Mahal)", text: "Mahal ang premium niyan, baka hindi ko kayang bayaran buwan-buwan." },
+          { label: "Human Escalation", text: "Gusto ko ng tao, ayoko makipag-usap sa bot." },
+          { label: "Privacy Concern", text: "Ayoko mag-share ng personal details ko." },
+          { label: "Fallback Test", text: "Ano ang stock price ng HarborSpring sa New York exchange ngayon?" }
+        ];
+      } else {
+        presets = [
+          { label: "Formal Inquiry", text: "Selamat siang. Saya ingin melihat simulasi pembiayaan konsumen." },
+          { label: "Colloquial (Cicilan & Tenor)", text: "Halo, mau cek dong soal cicilan per bulan dan simulasi tenornya." },
+          { label: "Loanwords (DP & Approval)", text: "Apakah butuh DP untuk approval, dan berapa estimasi cicilan per bulan untuk tenor 12 bulan?" },
+          { label: "Objection (Cicilan Berat)", text: "Cicilannya berat sekali, apakah ada opsi yang lebih ringan?" },
+          { label: "Human Escalation", text: "Saya mau bicara dengan orang sekarang juga." },
+          { label: "Fallback Test", text: "Berapa kurs dollar AS terhadap rupiah hari ini?" }
+        ];
+      }
+
+      presets.forEach(p => {
+        const chip = document.createElement("button");
+        chip.className = "chip";
+        chip.innerText = p.label;
+        chip.onclick = () => {
+          document.getElementById("user-input").value = p.text;
+          sendMessage();
+        };
+        container.appendChild(chip);
+      });
+    }
+
+    function renderTerminology() {
+      if (!marketConfig) return;
+      const grid = document.getElementById("term-grid");
+      grid.innerHTML = "";
+      const terms = Object.values(marketConfig.terminology);
+      document.getElementById("term-count-badge").innerText = `${terms.length} Terms`;
+
+      terms.forEach(t => {
+        const card = document.createElement("div");
+        card.className = "term-card";
+        card.innerHTML = `
+          <div class="term-header">
+            <span class="term-title">${t.term}</span>
+            <span class="term-local">${t.local_equivalent}</span>
+          </div>
+          <div class="term-desc"><strong>Meaning:</strong> ${t.meaning}</div>
+          <div class="term-desc"><strong>Usage note:</strong> ${t.usage_note}</div>
+          <div class="term-sample">💬 "${t.sample_phrase}"</div>
+        `;
+        grid.appendChild(card);
+      });
+
+      if (currentMarket === "PH") {
+        document.getElementById("code-switch-description").innerHTML = `
+          Natural Taglish code-switching preserves English banking nouns (<em>premium, coverage, beneficiary, rider</em>) embedded within Tagalog morphosyntax (e.g., <em>mag-apply, i-che-check, magkano po</em>). Archaic translations like 'bayarin' for premium or 'tagapagmana' for beneficiary are intentionally avoided.
+        `;
+      } else {
+        document.getElementById("code-switch-description").innerHTML = `
+          Consumer finance in Indonesia retains English loanwords (<em>tenor, DP, installment, approval</em>) alongside formal/colloquial Indonesian frames (<em>angsuran, cicilan, jatuh tempo</em>). The objection <em>'Cicilannya berat'</em> is addressed as an affordability concern rather than literally translating 'the installment is heavy'.
+        `;
+      }
+    }
+
+    function renderEngineProfile() {
+      if (!marketConfig) return;
+      const prof = marketConfig.asr_tts_profile;
+      document.getElementById("asr-provider-desc").innerText = prof.asr_prototype_provider;
+      document.getElementById("tts-approach-desc").innerText = prof.tts_approach;
+
+      // Challenges
+      const chList = document.getElementById("asr-challenges-list");
+      chList.innerHTML = prof.expected_asr_challenges.map(c => `<li>${c}</li>`).join("");
+
+      // Regional Accents
+      const regList = document.getElementById("regional-accents-list");
+      regList.innerHTML = marketConfig.regional_accent_considerations.map(r => `
+        <div style="margin-bottom: 8px;">
+          <strong>${r.region}:</strong> ${r.phonetic_variation}<br/>
+          <em style="font-size: 11px; color: var(--accent);">Mitigation: ${r.asr_mitigation}</em>
+        </div>
+      `).join("");
+
+      // Errors Table
+      const tb = document.getElementById("error-table-body");
+      tb.innerHTML = prof.likely_transcription_errors.map(e => `
+        <tr>
+          <td><code>${e.input}</code></td>
+          <td style="color: #f87171;">${e.error}</td>
+          <td style="color: #34d399;">${e.remedy}</td>
+        </tr>
+      `).join("");
+
+      // Limitations
+      const limList = document.getElementById("limitations-list");
+      limList.innerHTML = prof.native_language_limitations.concat(prof.regional_accent_limitations).map(l => `<li>${l}</li>`).join("");
+    }
+
+    function resetChat() {
+      const container = document.getElementById("chat-container");
+      container.innerHTML = "";
+      if (marketConfig) {
+        const greeting = marketConfig.greetings[currentLanguage] || marketConfig.greetings.en;
+        appendMessage("agent", greeting, {
+          intent: "greeting",
+          codeSwitch: false,
+          terms: [],
+          fallback: false,
+          escalation: false
+        });
+      }
+    }
+
+    function appendMessage(sender, text, meta = {}) {
+      const container = document.getElementById("chat-container");
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `message ${sender}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.innerText = text;
+      msgDiv.appendChild(bubble);
+
+      if (sender === "agent") {
+        const metaDiv = document.createElement("div");
+        metaDiv.className = "bubble-meta";
+
+        if (meta.intent) {
+          const tag = document.createElement("span");
+          tag.className = "meta-tag intent";
+          tag.innerText = meta.intent;
+          metaDiv.appendChild(tag);
+        }
+
+        if (meta.codeSwitch) {
+          const tag = document.createElement("span");
+          tag.className = "meta-tag code-switch";
+          tag.innerText = "Code-Switching";
+          metaDiv.appendChild(tag);
+        }
+
+        if (meta.terms && meta.terms.length > 0) {
+          meta.terms.forEach(t => {
+            const tag = document.createElement("span");
+            tag.className = "meta-tag term";
+            tag.innerText = t;
+            metaDiv.appendChild(tag);
+          });
+        }
+
+        if (meta.fallback) {
+          const tag = document.createElement("span");
+          tag.className = "meta-tag fallback";
+          tag.innerText = "Native Fallback";
+          metaDiv.appendChild(tag);
+        }
+
+        if (meta.escalation) {
+          const tag = document.createElement("span");
+          tag.className = "meta-tag escalation";
+          tag.innerText = "Human Escalation";
+          metaDiv.appendChild(tag);
+        }
+
+        const speakBtn = document.createElement("button");
+        speakBtn.className = "btn-action";
+        speakBtn.style.padding = "2px 6px";
+        speakBtn.style.fontSize = "10px";
+        speakBtn.innerText = "🔊";
+        speakBtn.onclick = () => speakText(text);
+        metaDiv.appendChild(speakBtn);
+
+        msgDiv.appendChild(metaDiv);
+      }
+
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("user-input");
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage("user", text);
+      input.value = "";
+
+      try {
+        const res = await fetch("/api/localization/turn", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            market: currentMarket,
+            language: currentLanguage,
+            text: text
+          })
+        });
+
+        if (!res.ok) throw new Error("Turn failed");
+        const data = await res.json();
+
+        appendMessage("agent", data.reply_text, {
+          intent: data.detected_intent,
+          codeSwitch: data.code_switched,
+          terms: data.terminology_matched,
+          fallback: data.fallback_used,
+          escalation: data.escalation_triggered
+        });
+
+        speakText(data.reply_text);
+      } catch (err) {
+        console.error("Error sending turn:", err);
+      }
+    }
+
+    // Text-to-Speech via Web Speech API
+    function speakText(text) {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+
+      if (currentMarket === "PH") {
+        utterance.lang = currentLanguage === "en" ? "en-PH" : "fil-PH";
+      } else {
+        utterance.lang = currentLanguage === "en" ? "en-ID" : "id-ID";
+      }
+
+      // Check available voices
+      const voices = window.speechSynthesis.getVoices();
+      const matchedVoice = voices.find(v => v.lang === utterance.lang || v.lang.startsWith(utterance.lang.slice(0, 2)));
+      if (matchedVoice) utterance.voice = matchedVoice;
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Speech-to-Text via Web Speech API
+    function toggleVoiceInput() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const btn = document.getElementById("mic-btn");
+
+      if (!SpeechRecognition) {
+        alert("Web SpeechRecognition is not supported in this browser. Please type your query.");
+        return;
+      }
+
+      if (isRecording) {
+        if (recognition) recognition.stop();
+        isRecording = false;
+        btn.innerText = "🎤 Voice";
+        btn.classList.remove("active");
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      if (currentMarket === "PH") {
+        recognition.lang = currentLanguage === "en" ? "en-PH" : "fil-PH";
+      } else {
+        recognition.lang = "id-ID";
+      }
+
+      recognition.onstart = () => {
+        isRecording = true;
+        btn.innerText = "🔴 Listening...";
+        btn.classList.add("active");
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById("user-input").value = transcript;
+        sendMessage();
+      };
+
+      recognition.onerror = (event) => {
+        console.warn("Speech recognition error:", event.error);
+        isRecording = false;
+        btn.innerText = "🎤 Voice";
+        btn.classList.remove("active");
+      };
+
+      recognition.onend = () => {
+        isRecording = false;
+        btn.innerText = "🎤 Voice";
+        btn.classList.remove("active");
+      };
+
+      recognition.start();
+    }
+
+    // Initialize
+    window.addEventListener("DOMContentLoaded", () => {
+      loadConfig("PH");
+    });
+  </script>
+</body>
+</html>

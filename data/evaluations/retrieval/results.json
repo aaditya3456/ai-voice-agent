@@ -1,0 +1,189 @@
+{
+  "generated_at": "2026-10-01T07:28:22.258Z",
+  "records": [
+    {
+      "id": "product-001",
+      "user_question": "What is the HarborSpring SME Business Loan?",
+      "expected_source": "HSB-001",
+      "expected_topic": "product",
+      "expected_answer_facts": [
+        "fictional SME lender",
+        "working capital or equipment"
+      ],
+      "unsupported": false,
+      "retrieved_chunk_ids": [
+        "HSB-001::001",
+        "HSB-001::004",
+        "HSB-001::002"
+      ],
+      "retrieved_document_ids": [
+        "HSB-001",
+        "HSB-001",
+        "HSB-001"
+      ],
+      "relevance_explanation": "Expected source appears in returned citations.",
+      "verdict": "correct",
+      "latency_ms": 10.313,
+      "confidence": 0.7609,
+      "fallback": false
+    },
+    {
+      "id": "qualification-001",
+      "user_question": "What monthly revenue do I need?",
+      "expected_source": "HSB-002",
+      "expected_topic": "qualification",
+      "expected_answer_facts": [
+        "100,000 HSC"
+      ],
+      "unsupported": false,
+      "retrieved_chunk_ids": [
+        "HSB-002::001",
+        "HSB-002R::001",
+        "HSB-005::002"
+      ],
+      "retrieved_document_ids": [
+        "HSB-002",
+        "HSB-002R",
+        "HSB-005"
+      ],
+      "relevance_explanation": "Expected source appears in returned citations.",
+      "verdict": "correct",
+      "latency_ms": 5.028,
+      "confidence": 0.91,
+      "fallback": false
+    },
+    {
+      "id": "policy-001",
+      "user_question": "How long must my business have been operating?",
+      "expected_source": "HSB-002",
+      "expected_topic": "policy",
+      "expected_answer_facts": [
+        "12 months"
+      ],
+      "unsupported": false,
+      "retrieved_chunk_ids": [
+        "HSB-002::001",
+        "HSB-002R::001",
+        "HSB-003::002"
+      ],
+      "retrieved_document_ids": [
+        "HSB-002",
+        "HSB-002R",
+        "HSB-003"
+      ],
+      "relevance_explanation": "Expected source appears in returned citations.",
+      "verdict": "correct",
+      "latency_ms": 5.843,
+      "confidence": 0.7666,
+      "fallback": false
+    },
+    {
+      "id": "faq-001",
+      "user_question": "Can I apply if I do not have all my documents yet?",
+      "expected_source": "HSB-005",
+      "expected_topic": "faq",
+      "expected_answer_facts": [
+        "documents",
+        "formal application"
+      ],
+      "unsupported": false,
+      "retrieved_chunk_ids": [
+        "HSB-005::023",
+        "HSB-005::015",
+        "HSB-002::001"
+      ],
+      "retrieved_document_ids": [
+        "HSB-005",
+        "HSB-005",
+        "HSB-002"
+      ],
+      "relevance_explanation": "Expected source appears in returned citations.",
+      "verdict": "correct",
+      "latency_ms": 5.21,
+      "confidence": 0.9262,
+      "fallback": false
+    },
+    {
+      "id": "objection-001",
+      "user_question": "I do not want to share my financial information.",
+      "expected_source": "HSB-006",
+      "expected_topic": "objection",
+      "expected_answer_facts": [
+        "respect",
+        "financial information"
+      ],
+      "unsupported": false,
+      "retrieved_chunk_ids": [
+        "HSB-006::001",
+        "HSB-007::001",
+        "HSB-005::015"
+      ],
+      "retrieved_document_ids": [
+        "HSB-006",
+        "HSB-007",
+        "HSB-005"
+      ],
+      "relevance_explanation": "Expected source appears in returned citations.",
+      "verdict": "correct",
+      "latency_ms": 4.491,
+      "confidence": 0.8057,
+      "fallback": false
+    },
+    {
+      "id": "process-001",
+      "user_question": "What documents are required?",
+      "expected_source": "HSB-003",
+      "expected_topic": "process",
+      "expected_answer_facts": [
+        "registration",
+        "revenue evidence"
+      ],
+      "unsupported": false,
+      "retrieved_chunk_ids": [
+        "HSB-003::002",
+        "HSB-006::001",
+        "HSB-005::005"
+      ],
+      "retrieved_document_ids": [
+        "HSB-003",
+        "HSB-006",
+        "HSB-005"
+      ],
+      "relevance_explanation": "Expected source appears in returned citations.",
+      "verdict": "correct",
+      "latency_ms": 4.756,
+      "confidence": 0.82,
+      "fallback": false
+    },
+    {
+      "id": "unsupported-001",
+      "user_question": "Can you guarantee that my loan will be approved?",
+      "expected_source": null,
+      "expected_topic": "unsupported",
+      "expected_answer_facts": [
+        "fallback"
+      ],
+      "unsupported": true,
+      "retrieved_chunk_ids": [],
+      "retrieved_document_ids": [],
+      "relevance_explanation": "Safely rejected below the configured retrieval threshold.",
+      "verdict": "correct",
+      "latency_ms": 4.769,
+      "confidence": 0.5897,
+      "fallback": true
+    }
+  ],
+  "metrics": {
+    "evaluation_size": 7,
+    "top_1_accuracy": 1,
+    "top_3_accuracy": 1,
+    "relevant_retrieval_rate": 1,
+    "unsupported_query_rejection_rate": 1,
+    "citation_coverage": 1,
+    "average_retrieval_latency_ms": 5.773,
+    "p50_retrieval_latency_ms": 5.028,
+    "p95_retrieval_latency_ms": 8.972,
+    "adapter": "prototype/local-hashing-embedding-adapter",
+    "limitation": "Seven synthetic queries are a functional regression set, not a statistically meaningful production benchmark."
+  }
+}

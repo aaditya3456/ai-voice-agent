@@ -1,0 +1,89 @@
+{
+  "summary": {
+    "generated_at": "2026-10-01T07:28:30.478Z",
+    "phase": "Q4",
+    "description": "Real-time Live Insights / Nudge Engine Evaluation",
+    "total_scenarios": 5,
+    "passed_scenarios": 5,
+    "pass_rate": 1,
+    "nudge_precision": 1,
+    "duplicate_suppression_result": {
+      "tested_scenario": "scenario-frustration",
+      "chunks_with_frustration": 2,
+      "nudges_emitted": 1,
+      "duplicates_suppressed": 1,
+      "suppression_working": true
+    },
+    "p50_latency_ms": 0.04,
+    "p95_latency_ms": 0.04,
+    "average_latency_ms": 0.04,
+    "signals_evaluated": [
+      "BUYING_SIGNAL",
+      "COMPLIANCE_RISK",
+      "FRUSTRATION",
+      "NO_NUDGE",
+      "CALLBACK_HUMAN_REQUEST"
+    ]
+  },
+  "records": [
+    {
+      "scenario_id": "scenario-buying-signal",
+      "expected_signal": "BUYING_SIGNAL",
+      "chunks_processed": 4,
+      "nudges_emitted": 1,
+      "suppressed_count": 0,
+      "detected_signals": [
+        "BUYING_SIGNAL"
+      ],
+      "final_status": "OPPORTUNITY",
+      "passed": true
+    },
+    {
+      "scenario_id": "scenario-compliance-risk",
+      "expected_signal": "COMPLIANCE_RISK",
+      "chunks_processed": 2,
+      "nudges_emitted": 1,
+      "suppressed_count": 0,
+      "detected_signals": [
+        "COMPLIANCE_RISK"
+      ],
+      "final_status": "CRITICAL_INTERVENTION",
+      "passed": true
+    },
+    {
+      "scenario_id": "scenario-frustration",
+      "expected_signal": "FRUSTRATION",
+      "chunks_processed": 4,
+      "nudges_emitted": 1,
+      "suppressed_count": 1,
+      "detected_signals": [
+        "FRUSTRATION",
+        "FRUSTRATION"
+      ],
+      "final_status": "NEEDS_ATTENTION",
+      "passed": true
+    },
+    {
+      "scenario_id": "scenario-noisy-transcript",
+      "expected_signal": "NO_NUDGE",
+      "chunks_processed": 3,
+      "nudges_emitted": 0,
+      "suppressed_count": 0,
+      "detected_signals": [],
+      "final_status": "NORMAL",
+      "passed": true
+    },
+    {
+      "scenario_id": "scenario-callback-request",
+      "expected_signal": "CALLBACK_HUMAN_REQUEST",
+      "chunks_processed": 1,
+      "nudges_emitted": 1,
+      "suppressed_count": 0,
+      "detected_signals": [
+        "CALLBACK_HUMAN_REQUEST"
+      ],
+      "final_status": "NEEDS_ATTENTION",
+      "passed": true
+    }
+  ]
+}

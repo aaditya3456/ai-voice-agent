@@ -1,0 +1,27 @@
+{
+  "name": "harborspring-assessment-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Synthetic-only AI engineering assessment prototype for HarborSpring Business Finance.",
+  "type": "module",
+  "scripts": {
+    "validate:source-pack": "node scripts/validate-source-pack.mjs",
+    "validate:source-pack:write": "node scripts/validate-source-pack.mjs --write-hashes",
+    "test": "node --test tests/**/*.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "node --check scripts/validate-source-pack.mjs",
+    "kb:ingest": "npm run build && node dist/scripts/ingest-knowledge.js",
+    "kb:evaluate": "npm run build && node dist/scripts/evaluate-retrieval.js",
+    "kb:search": "npm run build && node dist/scripts/search-knowledge.js",
+    "api": "npm run build && node dist/apps/api/src/server.js",
+    "voice-agent": "npm run build && node dist/apps/voice-agent/src/server.js",
+    "q1:evaluate": "npm run build && node dist/scripts/evaluate-q1.js",
+    "q3:evaluate": "npm run build && node dist/scripts/evaluate-q3.js",
+    "q4:evaluate": "npm run build && node dist/scripts/evaluate-insights.js"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.8.0"
+  }
+}

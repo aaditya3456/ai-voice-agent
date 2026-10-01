@@ -1,0 +1,263 @@
+{
+  "summary": {
+    "generated_at": "2026-10-01T07:28:27.091Z",
+    "phase": "Q3",
+    "description": "Native-Language Voice Bots Evaluation (Philippines & Indonesia)",
+    "total_scenarios": 11,
+    "passed_scenarios": 11,
+    "pass_rate": 1,
+    "philippines_localization_coverage": {
+      "scenarios_tested": 5,
+      "scenarios_passed": 5,
+      "coverage_rate": 1,
+      "registers_tested": [
+        "en",
+        "fil",
+        "taglish"
+      ]
+    },
+    "indonesia_localization_coverage": {
+      "scenarios_tested": 6,
+      "scenarios_passed": 6,
+      "coverage_rate": 1,
+      "registers_tested": [
+        "id_formal",
+        "id_colloquial",
+        "en_loanwords"
+      ]
+    },
+    "code_switching_tests": {
+      "tested": 2,
+      "passed": 2,
+      "pass_rate": 1
+    },
+    "fallback_language_tests": {
+      "tested": 2,
+      "passed": 2,
+      "pass_rate": 1,
+      "retains_filipino_on_ph_fallback": true,
+      "retains_indonesian_on_id_fallback": true,
+      "unexpected_english_switch_detected": false
+    },
+    "terminology_coverage": {
+      "total_domain_terms": 12,
+      "unique_terms_matched_in_eval": 7,
+      "coverage_rate": 0.5833,
+      "terms_covered": [
+        "Premium",
+        "Coverage",
+        "Pembiayaan",
+        "Cicilan / Angsuran",
+        "Tenor",
+        "DP (Down Payment)",
+        "Approval"
+      ]
+    },
+    "asr_tts_verification": {
+      "philippines_asr_provider": "Native Browser Web Speech API (`SpeechRecognition` with `fil-PH` / `en-PH` language tags) with local deterministic simulation fallback.",
+      "indonesia_asr_provider": "Native Browser Web Speech API (`SpeechRecognition` with `id-ID` language tag) with local deterministic simulated transcript fallback.",
+      "regional_accents_documented": [
+        "PH: Cebu / Central Visayas (Bisaya-accented Tagalog)",
+        "ID: Jawa Tengah & Jawa Timur (Javanese breathy voiced stops)",
+        "ID: Jawa Barat (Sundanese /f/ <-> /p/ phonetic alternation)"
+      ],
+      "native_speaker_validated": false,
+      "disclaimer": "SYNTHETIC PROTOTYPE ONLY. No external telephony, cloud credentials, or native-speaker linguistic validation performed."
+    }
+  },
+  "records": [
+    {
+      "scenario_id": "PH-01",
+      "name": "Philippines: English cooperative customer",
+      "market": "PH",
+      "language": "en",
+      "category": "cooperative",
+      "input_query": "Hello, I am interested in exploring family protection options.",
+      "detected_intent": "qualification_discovery",
+      "code_switched": false,
+      "terminology_matched": [],
+      "fallback_used": false,
+      "escalation_triggered": false,
+      "reply_text": "Are you interested in exploring general life protection options for your family?",
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "scenario_id": "PH-02",
+      "name": "Philippines: Tagalog cooperative customer",
+      "market": "PH",
+      "language": "fil",
+      "category": "cooperative",
+      "input_query": "Magandang araw po. Interesado po akong malaman ang tungkol sa proteksyon ng pamilya.",
+      "detected_intent": "qualification_discovery",
+      "code_switched": false,
+      "terminology_matched": [],
+      "fallback_used": false,
+      "escalation_triggered": false,
+      "reply_text": "Interesado po ba kayong malaman ang mga opsyon para sa proteksyon ng inyong pamilya?",
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "scenario_id": "PH-03",
+      "name": "Philippines: Taglish mixed conversation",
+      "market": "PH",
+      "language": "taglish",
+      "category": "code_switching",
+      "input_query": "Pwede po ba i-explain kung magkano ang monthly premium at paano ang coverage?",
+      "detected_intent": "payment_explanation",
+      "code_switched": true,
+      "terminology_matched": [
+        "Premium",
+        "Coverage"
+      ],
+      "fallback_used": false,
+      "escalation_triggered": false,
+      "reply_text": "Ang premium amount na 'to ay sample estimate lang for this prototype; hindi pa ito final quote.",
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "scenario_id": "PH-04",
+      "name": "Philippines: Insurance-specific objection",
+      "market": "PH",
+      "language": "taglish",
+      "category": "objection",
+      "input_query": "Mahal ang premium niyan, baka hindi ko kayang bayaran buwan-buwan.",
+      "detected_intent": "objection_expensive_premium",
+      "code_switched": true,
+      "terminology_matched": [
+        "Premium"
+      ],
+      "fallback_used": false,
+      "escalation_triggered": false,
+      "reply_text": "Naiintindihan ko po ang inyong concern. Ang halagang nabanggit ay sample illustration lamang at hindi pinal. Ang aming prototype ay hindi maaaring magbaba o mag-quote ng indibidwal na presyo. Nais niyo po bang kumonsulta sa isang licensed human advisor?",
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "scenario_id": "PH-05",
+      "name": "Philippines: Human escalation",
+      "market": "PH",
+      "language": "taglish",
+      "category": "escalation",
+      "input_query": "Gusto ko ng tao, ayoko makipag-usap sa bot.",
+      "detected_intent": "human_escalation",
+      "code_switched": false,
+      "terminology_matched": [],
+      "fallback_used": false,
+      "escalation_triggered": true,
+      "reply_text": "Sure po! I-transfer ko po kayo sa aming human financial advisor para maasikaso kayo nang maayos.",
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "scenario_id": "ID-06",
+      "name": "Indonesia: Formal Bahasa cooperative customer",
+      "market": "ID",
+      "language": "id_formal",
+      "category": "cooperative",
+      "input_query": "Selamat siang. Saya ingin melihat simulasi pembiayaan konsumen.",
+      "detected_intent": "qualification_discovery",
+      "code_switched": false,
+      "terminology_matched": [
+        "Pembiayaan"
+      ],
+      "fallback_used": false,
+      "escalation_triggered": false,
+      "reply_text": "Apakah Bapak/Ibu berminat untuk melihat simulasi contoh pembiayaan konsumen kami?",
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "scenario_id": "ID-07",
+      "name": "Indonesia: Colloquial Bahasa conversation",
+      "market": "ID",
+      "language": "id_colloquial",
+      "category": "cooperative",
+      "input_query": "Halo, mau cek dong soal cicilan per bulan dan simulasi tenornya.",
+      "detected_intent": "payment_explanation",
+      "code_switched": false,
+      "terminology_matched": [
+        "Cicilan / Angsuran",
+        "Tenor"
+      ],
+      "fallback_used": false,
+      "escalation_triggered": false,
+      "reply_text": "Untuk contoh ini, DP, tenor, dan angsuran semuanya cuma ilustrasi ya—bukan offer yang beneran.",
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "scenario_id": "ID-08",
+      "name": "Indonesia: Mixed English/finance terminology",
+      "market": "ID",
+      "language": "id_formal",
+      "category": "code_switching",
+      "input_query": "Apakah butuh DP untuk approval, dan berapa estimasi cicilan per bulan untuk tenor 12 bulan?",
+      "detected_intent": "payment_explanation",
+      "code_switched": true,
+      "terminology_matched": [
+        "Cicilan / Angsuran",
+        "Tenor",
+        "DP (Down Payment)",
+        "Approval"
+      ],
+      "fallback_used": false,
+      "escalation_triggered": false,
+      "reply_text": "Untuk contoh ini, DP, tenor, dan angsuran semuanya illustrative—bukan penawaran pembiayaan yang sebenarnya.",
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "scenario_id": "ID-09",
+      "name": "Indonesia: Consumer-finance objection",
+      "market": "ID",
+      "language": "id_formal",
+      "category": "objection",
+      "input_query": "Cicilannya berat sekali, apakah ada opsi yang lebih ringan?",
+      "detected_intent": "objection_high_installment",
+      "code_switched": false,
+      "terminology_matched": [
+        "Cicilan / Angsuran"
+      ],
+      "fallback_used": false,
+      "escalation_triggered": false,
+      "reply_text": "Kami sangat memahami kekhawatiran Bapak/Ibu. Simulasi cicilan ini hanyalah angka contoh dan kami tidak menyarankan mengambil pembiayaan yang membebani anggaran Anda. Apakah Bapak/Ibu ingin mencoba simulasi tenor yang lebih panjang, atau ingin saya hubungkan ke petugas resmi?",
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "scenario_id": "ID-10",
+      "name": "Indonesia: Human escalation",
+      "market": "ID",
+      "language": "id_formal",
+      "category": "escalation",
+      "input_query": "Saya mau bicara dengan orang sekarang juga.",
+      "detected_intent": "human_escalation",
+      "code_switched": false,
+      "terminology_matched": [],
+      "fallback_used": false,
+      "escalation_triggered": true,
+      "reply_text": "Baik Bapak/Ibu, saya akan segera menghubungkan Anda ke petugas resmi kami. Mohon ditunggu sebentar.",
+      "passed": true,
+      "failure_reasons": []
+    },
+    {
+      "scenario_id": "ID-11",
+      "name": "Indonesia: Regional accent/variant limitation check",
+      "market": "ID",
+      "language": "id_formal",
+      "category": "regional_accent",
+      "input_query": "Apakah ada cabang di Jawa Tengah atau Bandung untuk verifikasi?",
+      "detected_intent": "unsupported_fallback",
+      "code_switched": false,
+      "terminology_matched": [],
+      "fallback_used": true,
+      "escalation_triggered": false,
+      "reply_text": "Saya belum punya informasi sintetis yang terverifikasi untuk itu. Saya bisa meneruskan ke petugas manusia.",
+      "passed": true,
+      "failure_reasons": []
+    }
+  ]
+}
