@@ -1,3 +1,7 @@
+Live demo URL — https://ai-voice-agent-zp2s.onrender.com/
+URL — /localization.html
+URL — /insights.html
+
 # HarborSpring assessment prototype
 
 This is a work-in-progress AI engineering assessment prototype for **HarborSpring Business Finance**, a fictional company. The primary future use case is SME business-loan qualification.
