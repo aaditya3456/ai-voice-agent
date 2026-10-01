@@ -21,7 +21,7 @@
     "q4:evaluate": "npm run build && node dist/scripts/evaluate-insights.js"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
+    "@types/node": "^24.19.0",
     "typescript": "^5.8.0"
   }
 }
